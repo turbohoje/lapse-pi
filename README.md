@@ -12,3 +12,6 @@ code for grabbing a timelapse with a pi
 * setup key exchange
 * ssh-keygen
 * ssh-copy-id -i ~/.ssh/mykey user@host
+* crontab  * * * * * /home/pi/lapse-pi/pi/cron.sh
+* crontab  * * * * * /home/pi/lapse-pi/pi/sync.sh
+* /var/www/html rm index, ln -s /home/pi/lapse-pi/archive archive
