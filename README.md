@@ -20,4 +20,5 @@ code for grabbing a timelapse with a pi
 * crontab  * * * * * /home/pi/lapse-pi/pi/sync.sh
 * /var/www/html rm index, ln -s /home/pi/lapse-pi/archive archive
 
-* vm.min_free_kbytes = 32768 in /etc/sysctl.conf
+* `vm.min_free_kbytes = 32768` in /etc/sysctl.conf
+* `smsc95xx.turbo_mode=N` /boot/cmdline.txt 
