@@ -6,16 +6,16 @@ IMGDIR=/mnt/terra/media/marmot/archive/
 OUTDIR=~/lapse-pi/video-out/imgcache
 
 MAX=$((60*24))
-
+#MAXCMD="| tail -${MAX}"
 rm -rf ${OUTDIR}
 
 mkdir -p ${OUTDIR}
 COUNT=1
-TOTAL=`find ${IMGDIR} -name "*.jpg" | tail -${MAX} | wc -l`
-for FILE in `find ${IMGDIR} -name "*.jpg" | sort | tail -${MAX} `; do \
+TOTAL=`find ${IMGDIR} -name "*.jpg" ${MAXCMD} | wc -l`
+for FILE in `find ${IMGDIR} -name "*.jpg" | sort ${MAXCMD} `; do \
   	echo "Processing file ${COUNT}/${TOTAL}"
 	FILENAME=$(printf 'G%07d.JPG' $COUNT)
-	mogrify -resize 1280x720^ -gravity center -crop 1280x720+0+0 +repage -write ${OUTDIR}/${FILENAME} $FILE
+	mogrify -resize 1280x720^ -gravity south -crop 1280x650+0+0 +repage -write ${OUTDIR}/${FILENAME} $FILE
 	COUNT=$((COUNT+1))
 done
 
