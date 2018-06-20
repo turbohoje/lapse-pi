@@ -8,6 +8,7 @@ code for grabbing a timelapse with a pi
   * enable camera
   * fix timezone/locale
 * `apt-get update`
+* `apt-get upgrade`
 * `apt-get install -y apache2 git`vim
 * modify /boot/config.txt to have `disable_camera_led=1` 
 * `git clone <this repo>`
@@ -22,3 +23,4 @@ code for grabbing a timelapse with a pi
 
 * `vm.min_free_kbytes = 32768` in /etc/sysctl.conf
 * `smsc95xx.turbo_mode=N` /boot/cmdline.txt 
+* `rpi-update`
