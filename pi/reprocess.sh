@@ -15,7 +15,13 @@ for FILE in `find ${BASEPATH} | sort`; do
 		if [ -f $DEST ]; then
 			echo "SKIPPING $DEST"
 		else
-			echo "mogrify -resize 1280x720^ -gravity south -crop 1280x650+0+0 +repage -write $DEST $FILE"
+			DIR=${DEST:0:40}
+			if [ ! -d "$DIR" ]; then
+				echo "Making ${DIR}"
+				mkdir -p ${DIR}
+			fi
+			echo "Processing $DEST"
+			mogrify -resize 1280x720^ -gravity south -crop 1280x650+0+0 +repage -write $DEST $FILE
 		fi
 	fi
 done
