@@ -4,6 +4,8 @@ BASEPATH="/home/pi/lapse-pi"
 DATE=$(date +"%Y-%m-%d")
 TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
 
+date > ${BASEPATH}/processed/df.txt
+df -h >> ${BASEPATH}/processed/df.txt
 
 mkdir -p "${BASEPATH}/archive/0/${DATE}/"
 mkdir -p "${BASEPATH}/processed/0/${DATE}/"
