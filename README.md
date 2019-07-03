@@ -24,3 +24,16 @@ code for grabbing a timelapse with a pi
 * `vm.min_free_kbytes = 32768` in /etc/sysctl.conf
 * `smsc95xx.turbo_mode=N` /boot/cmdline.txt 
 * `rpi-update`
+
+
+# connectvity hacks
+in case you dont have direct access to the host
+use the 'haus' server to host connections.
+correc ufw for opening a port e.g. 8222
+in /etc/ssh/sshd_config 
+* GatewayPorts yes
+
+on the installed pi
+* ssh -R \*.8222:localhost:22 user@hausaddress.com -N
+
+then you can shell to the haus and get forwarded to the pi behind the firewall
