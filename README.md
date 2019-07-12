@@ -1,4 +1,7 @@
 # lapse-pi
+
+![installed camera](https://i.imgur.com/yWUIKSJ.jpg)
+
 code for grabbing a timelapse with a pi
 # installation
 * passwd
