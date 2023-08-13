@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEPATH="/home/pi/lapse-pi"
+BASEPATH="/home/turbohoje/lapse-pi"
 DATE=$(date +"%Y-%m-%d")
 TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
 
