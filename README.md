@@ -20,8 +20,7 @@ code for grabbing a timelapse with a pi
 * setup key exchange
 * ssh-keygen
 * ssh-copy-id -i ~/.ssh/mykey user@host
-* crontab  * * * * * /home/pi/lapse-pi/pi/cron.sh
-* crontab  * * * * * /home/pi/lapse-pi/pi/sync.sh
+* crontab config (below)
 * /var/www/html rm index, ln -s /home/pi/lapse-pi/archive archive
 
 * `vm.min_free_kbytes = 32768` in /etc/sysctl.conf
@@ -40,3 +39,8 @@ on the installed pi
 * ssh -R \*.8222:localhost:22 user@hausaddress.com -N
 
 then you can shell to the haus and get forwarded to the pi behind the firewall
+
+#Crontab
+* * * * * UN=admin PW=notreal /home/turbohoje/lapse-pi/pi/cron.sh
+0 * * * * /bin/timeout -s2 3599 /home/turbohoje/lapse-pi/pi/sync.sh
+59 * * * * find ~/lapse-pi/archive/0/ -type d -empty -print -delete 
