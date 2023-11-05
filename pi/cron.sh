@@ -25,12 +25,17 @@ mkdir -p "${BASEPATH}/archive/0/${DATE}/"
 
 #mogrify -resize 1280x720^ -gravity south +repage -write ${BASEPATH}/processed/1/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg
 
-#camera 0, wide angel of the house
+#camera 0, wide angle of the house
 curl "https://10.42.0.19/cgi-bin/api.cgi?cmd=Snap&channel=0&user=$UN&password=$PW" -s --insecure --output ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 
-/usr/bin/mogrify -compress JPEG2000 -quality 90 -write ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
+# note: ubuntu/rasbian mogrify does not modify the source file, -write is obeyed.  rocky 9.2 mogrify modifies the source
+#/usr/bin/mogrify -compress JPEG2000 -quality 90 -write ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
+#/usr/bin/mogrify -compress JPEG2000 -resize "20%" -write ${BASEPATH}/thumb.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 
-/usr/bin/mogrify -compress JPEG2000 -resize 20% -write ${BASEPATH}/thumb.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
+# rocky mogrify
+cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/thumb.jpg
+/usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
+/usr/bin/mogrify -compress JPEG2000 -resize "20%" ${BASEPATH}/thumb.jpg 
 
 gsutil cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg  gs://tlco-public/latest.jpg
 gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
