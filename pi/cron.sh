@@ -30,4 +30,7 @@ curl "https://10.42.0.19/cgi-bin/api.cgi?cmd=Snap&channel=0&user=$UN&password=$P
 
 /usr/bin/mogrify -compress JPEG2000 -quality 90 -write ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 
+/usr/bin/mogrify -compress JPEG2000 -resize 20% -write ${BASEPATH}/thumb.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 
+gsutil cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg  gs://tlco-public/latest.jpg
+gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
