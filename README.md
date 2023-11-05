@@ -41,6 +41,8 @@ on the installed pi
 then you can shell to the haus and get forwarded to the pi behind the firewall
 
 #Crontab
+```
 * * * * * UN=admin PW=notreal /home/turbohoje/lapse-pi/pi/cron.sh
 0 * * * * /bin/timeout -s2 3599 /home/turbohoje/lapse-pi/pi/sync.sh
 59 * * * * find ~/lapse-pi/archive/0/ -type d -empty -print -delete 
+```
