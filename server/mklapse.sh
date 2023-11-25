@@ -12,10 +12,19 @@ IMGDIR=~/lapse-pi/archive/0/$DATE
 OUTDIR=~/lapse-pi/video-out/imgcache
 VIDDIR=~/lapse-pi/video-out
 #BAKDIR=/mnt/terra/media/marmot/archive
+gen=1
 
 #rsync -azvh --no-o --no-g ${IMGDIR} ${BAKDIR}
 
+if [ $# != 0 ]; then
+	if [ $1 == "--skip" ]; then
+		echo "skiping generation of file"
+		gen=0
+	fi
+fi
 
+if [ $gen == 1 ]; then
+echo "generating video"
 MAX=$((60*24))
 #rm -rf ${OUTDIR}
 rm -rf ${VIDDIR}
@@ -49,11 +58,17 @@ for FILE in `find ${IMGDIR} -name "*.jpg" | sort | tail -${MAX} `; do \
 	fi
 done
 
-cd ${OUTDIR}
 
+
+#make the video
+cd ${OUTDIR}
 rm -f ${VIDDIR}/video.mp4
 ffmpeg -start_number 1 -i G%07d.JPG -c:v libx264 -pix_fmt yuv420p ${VIDDIR}/video.mp4
 mv ${VIDDIR}/video.mp4 ${VIDDIR}/last.mp4
+
+fi
+
+echo "uploading video"
 
 cd /home/turbohoje/lapse-pi/
 ./up.py $DATE
