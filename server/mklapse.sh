@@ -6,7 +6,7 @@
 # 0 * * * * run-one /home/turbohoje/lapse-pi/server/mk_lapse.sh
 
 
-DATE=$(date -d "1 day ago" '+%Y-%m-%d')
+DATE=$(date -d "0 day ago" '+%Y-%m-%d')
 echo "processing for $DATE"
 IMGDIR=~/lapse-pi/archive/0/$DATE
 OUTDIR=~/lapse-pi/video-out/imgcache
@@ -68,7 +68,9 @@ mv ${VIDDIR}/video.mp4 ${VIDDIR}/last.mp4
 
 fi
 
-echo "uploading video"
 
 cd /home/turbohoje/lapse-pi/
+echo "token"
+./refresh.py
+echo "uploading video"
 ./up.py $DATE
