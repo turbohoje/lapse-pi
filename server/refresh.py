@@ -5,7 +5,7 @@ import google.auth.transport.requests
 import requests
 import google.oauth2.credentials
 
-f = open('./credentials.storage')
+f = open('./creds.storage')
 data = json.load(f)
 f.close()
 
@@ -14,7 +14,7 @@ for i in data:
 
 #credentials = google.oauth2.credentials.Credentials('./credentials.storage')
 credentials = google.oauth2.credentials.Credentials(
-    data['access_token'],
+    token=data['access_token'],
     refresh_token=data['refresh_token'],
     token_uri=data['token_uri'],
     client_id=data['client_id'],
@@ -23,7 +23,6 @@ credentials = google.oauth2.credentials.Credentials(
     
     )
 
-print(credentials.token)
 print(f"access token: {credentials.token}")
 print(credentials.expiry)
 
