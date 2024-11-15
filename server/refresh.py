@@ -1,42 +1,54 @@
 #!/usr/bin/env python3
 
+import os
 import json
 import google.auth.transport.requests
-import requests
-import google.oauth2.credentials
+from google.oauth2.credentials import Credentials
 
-f = open('./creds.storage')
-data = json.load(f)
-f.close()
+# Path to your credentials.json (the file containing client_id, client_secret, and refresh_token)
+CREDENTIALS_FILE = 'creds.storage'
 
-for i in data:
-    print(f"{i} - {data[i]}")
+def refresh_token():
+    # Check if credentials file exists
+    if os.path.exists(CREDENTIALS_FILE):
+        with open(CREDENTIALS_FILE, 'r') as credentials_file:
+            credentials_data = json.load(credentials_file)
+    else:
+        print(f'Credentials file "{CREDENTIALS_FILE}" not found.')
+        return
 
-#credentials = google.oauth2.credentials.Credentials('./credentials.storage')
-credentials = google.oauth2.credentials.Credentials(
-    token=data['access_token'],
-    refresh_token=data['refresh_token'],
-    token_uri=data['token_uri'],
-    client_id=data['client_id'],
-    client_secret=data['client_secret'],
-    scopes=data['scopes'],
-    
+    # Check if the necessary fields are present in the credentials file
+    if 'client_id' not in credentials_data or 'client_secret' not in credentials_data or 'refresh_token' not in credentials_data:
+        print('Missing required fields in credentials.json (client_id, client_secret, or refresh_token).')
+        return
+
+    # Create credentials object using refresh token from credentials.json
+    credentials = Credentials(
+        None,  # No access token initially
+        refresh_token=credentials_data['refresh_token'],
+        token_uri="https://oauth2.googleapis.com/token",
+        client_id=credentials_data['client_id'],
+        client_secret=credentials_data['client_secret']
     )
 
-print(f"access token: {credentials.token}")
-print(credentials.expiry)
+    # Refresh the token
+    try:
+        request = google.auth.transport.requests.Request()
+        credentials.refresh(request)
+        print('Token refreshed successfully!')
 
-request = google.auth.transport.requests.Request()
-credentials.refresh(request)
+        # Update the credentials data with the new access token and expiration time
+        credentials_data['token'] = credentials.token
+        credentials_data['expiry'] = credentials.expiry.isoformat() if credentials.expiry else None
 
-print(f"access token: {credentials.token}")
-print(credentials.expiry)
-json_token = json.loads(credentials.to_json())
-for k in ['_module', '_class', 'user_agent', 'invalid']:
-    print("assigning "+k)
-    json_token[k] = data[k]
-json_token['access_token'] = json_token['token']
-json_token['token_expiry'] = json_token['expiry']
-f = open("./creds.storage", "w")
-f.write(json.dumps(json_token))
-f.close()
+        # Save the updated credentials back to the credentials.json file
+        with open(CREDENTIALS_FILE, 'w') as credentials_file:
+            json.dump(credentials_data, credentials_file, indent=4)
+        print(f'Updated credentials saved to "{CREDENTIALS_FILE}".')
+
+    except Exception as e:
+        print(f'Error refreshing token: {e}')
+
+if __name__ == "__main__":
+    refresh_token()
+

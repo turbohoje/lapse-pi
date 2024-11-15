@@ -6,7 +6,10 @@ import sys
 
 # loggin into the channel
 channel = Channel()
-channel.login("client_secret.json", "credentials.storage")
+#creds.storage is for the upload
+#credentials.storage is for storing the refresh token info used my ./refresh.py
+
+channel.login("client_secret.json", "creds.storage")
 
 # setting up the video that is going to be uploaded
 video = LocalVideo(file_path="video-out/last.mp4")
