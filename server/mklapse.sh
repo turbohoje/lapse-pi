@@ -1,7 +1,8 @@
 #!/bin/bash
-days=1 # number of days since today
-gen=1  # 0==dry un
-cam=0  # 0 main, 1 box
+days=1 # number of days since today, 1 == yesterday
+gen=1  # 1 == generate file
+cam=0  # 0 main hous, 1 box
+upload=1
 
 # Parse command-line arguments
 for arg in "$@"; do
@@ -38,7 +39,7 @@ if [ $gen == 1 ]; then
 	echo "generating video"
 	MAX=$((60*24))
 	rm -rf ${OUTDIR}
-	rm -rf ${VIDDIR}
+	#rm -rf ${VIDDIR}
 
 	mkdir -p ${OUTDIR}
 
@@ -73,21 +74,26 @@ if [ $gen == 1 ]; then
 
 
 	#make the video
+	set -x
 	cd ${OUTDIR}
-	rm -f ${VIDDIR}/video.mp4
+	rm -f $VIDDIR/video.mp4
 	echo "generating video for $DATE"
 	ffmpeg -start_number 1 -i G%07d.JPG -c:v libx264 -pix_fmt yuv420p ${VIDDIR}/video.mp4
-	mv ${VIDDIR}/video.mp4 ${VIDDIR}/last.mp4
-
+	mv $VIDDIR/video.mp4 $VIDDIR/last.mp4
+	set +x
 fi
 
-
-cd /home/turbohoje/lapse-pi/
-echo "token"
-./refresh.py
-echo "uploading video"
-./up.py $DATE
-
-
+set -x
+if [ $upload == 1 ]; then
+	cd /home/turbohoje/lapse-pi/
+	echo "token"
+	./refresh.py
+	echo "uploading video"
+	./up.py $DATE
+else
+	mv $VIDDIR/last.mp4 $VIDDIR/$DATE-$cam.mp4
+	ls -hal $VIDDIR/*.mp4
+fi
+set +x
 #./mklapse.sh --days=$days --cam=1
 

@@ -1,6 +1,9 @@
 #!/usr/bin/bash
 
-for ((i=16; i>=1; i--))
+DAYS=10
+set -e
+
+for ((i=$DAYS; i>=1; i--))
 do
   echo ""
   echo "./mklapse.sh --days=$i"
