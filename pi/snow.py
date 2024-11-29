@@ -2,21 +2,25 @@
 
 import cv2
 import numpy as np
-import os
+import argparse
 
-# Get the current script directory
-script_dir = os.path.dirname(os.path.abspath(__file__))
-
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="Mark a snow stake on an image.")
+parser.add_argument("filename", help="Path to the image file to be processed.")
+args = parser.parse_args()
 
 # Load the image
-input_image_path = script_dir+'/snow-stake.jpg'
-output_image_path = script_dir+'/snow-stake-marked.jpg'
+input_image_path = args.filename
 image = cv2.imread(input_image_path)
 
+if image is None:
+    raise FileNotFoundError(f"Image file not found: {input_image_path}")
+
 # Coordinates of the snow stake (modify based on your image's stake position)
+y_offset = 8
 stake_x = 2250  # Approximate x-coordinate of the snow stake
-stake_top_y = 734  # Approximate top y-coordinate of the stake
-stake_bottom_y = 1347  # Approximate bottom y-coordinate of the stake
+stake_top_y = 734-y_offset  # Approximate top y-coordinate of the stake
+stake_bottom_y = 1347-y_offset  # Approximate bottom y-coordinate of the stake
 
 # Stake properties
 stake_height_feet = 8  # The stake is 8 feet tall
@@ -53,6 +57,7 @@ for foot in range(stake_height_feet):
 # Draw the central vertical stake line
 cv2.line(marked_image, (stake_x, stake_top_y), (stake_x, stake_bottom_y), (255, 0, 0), 2)
 
-# Save the marked image
-cv2.imwrite(output_image_path, marked_image)
-print(f"Marked image saved to {output_image_path}")
+# Overwrite the original image
+cv2.imwrite(input_image_path, marked_image)
+print(f"Marked image saved to {input_image_path}")
+

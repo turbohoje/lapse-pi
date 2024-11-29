@@ -5,6 +5,7 @@ BASEPATH="/home/turbohoje/lapse-pi"
 DATE=$(date +"%Y-%m-%d")
 TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
 
+
 date > ${BASEPATH}/processed/df.txt
 df -h >> ${BASEPATH}/processed/df.txt
 
@@ -33,11 +34,15 @@ curl "https://10.42.0.19/cgi-bin/api.cgi?cmd=Snap&channel=0&user=$UN&password=$P
 #/usr/bin/mogrify -compress JPEG2000 -resize "20%" -write ${BASEPATH}/thumb.jpg ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 
 # rocky mogrify
-cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/thumb.jpg
+cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/src.jpg
+#snow
+/home/turbohoje/lapse-pi/pi/snow.py ${BASEPATH}/src.jpg
+
+cp ${BASEPATH}/src.jpg ${BASEPATH}/thumb.jpg
 /usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 /usr/bin/mogrify -compress JPEG2000 -resize "20%" ${BASEPATH}/thumb.jpg 
 
-gsutil cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg  gs://tlco-public/latest.jpg
+gsutil cp ${BASEPATH}/src.jpg  gs://tlco-public/latest.jpg
 gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
 
 
@@ -45,3 +50,4 @@ gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
 mkdir -p "${BASEPATH}/archive/1/${DATE}/"
 curl "https://10.42.0.35/cgi-bin/api.cgi?cmd=Snap&channel=0&user=$UN&password=$PW" -s --insecure --output ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg
 /usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg
+gsutil cp ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg  gs://tlco-public/box.jpg
