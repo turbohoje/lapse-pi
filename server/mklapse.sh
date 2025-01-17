@@ -3,22 +3,46 @@ days=1 # number of days since today, 1 == yesterday
 gen=1  # 1 == generate file
 cam=0  # 0 main hous, 1 box
 upload=1
+gcs=0 # upload weekday to bucket
 
 # Parse command-line arguments
 for arg in "$@"; do
-  case $arg in
+    case $arg in
     --days=*)
       days="${arg#*=}"
       shift
       ;;
+    --gen=*)
+      gen="${arg#*=}"
+      shift
+      ;;
+    --cam=*)
+      cam="${arg#*=}"
+      shift
+      ;;
+    --upload=*)
+      upload="${arg#*=}"
+      shift
+      ;;
+    --gcs=*)
+      gcs="${arg#*=}"
+      shift
+      ;;
+    --skip)
+      echo "Skipping generation of file"
+      gen=0
+      shift
+      ;;
+    *)
+      echo "Unknown argument: $arg"
+      ;;
   esac
-
-#   case "--skip"
-# 		echo "skiping generation of file"
-# 		gen=0
-# 	esac
 done
 echo "Days ago: $days"
+echo "Generate file: $gen"
+echo "Camera type: $cam"
+echo "Upload YT: $upload"
+echo "GCS upload: $gcs"
 
 #apt get ffmpeg imagemagick
 
@@ -27,7 +51,9 @@ echo "Days ago: $days"
 
 
 DATE=$(date -d "$days day ago" '+%Y-%m-%d')
-echo "processing for $DATE"
+DOW=$(date -d "$days day ago" +"%A")
+echo "processing for $DATE $DOW"
+sleep 2
 IMGDIR=~/lapse-pi/archive/$cam/$DATE
 OUTDIR=~/lapse-pi/video-out/imgcache$cam
 VIDDIR=~/lapse-pi/video-out
@@ -36,7 +62,7 @@ VIDDIR=~/lapse-pi/video-out
 
 
 if [ $gen == 1 ]; then
-	echo "generating video"
+	echo "Generating video in ${OUTDIR} from images in ${IMGDIR}"
 	MAX=$((60*24))
 	rm -rf ${OUTDIR}
 	#rm -rf ${VIDDIR}
@@ -92,8 +118,11 @@ if [ $upload == 1 ]; then
 	./up.py $DATE
 else
 	mv $VIDDIR/last.mp4 $VIDDIR/$DATE-$cam.mp4
-	ls -hal $VIDDIR/*.mp4
+	#ls -hal $VIDDIR/*.mp4
+
+	if [ $gcs == 1 ]; then
+		gsutil cp $VIDDIR/$DATE-$cam.mp4  gs://tlco-public/$DOW.mp4
+	fi 
 fi
 set +x
-#./mklapse.sh --days=$days --cam=1
 
