@@ -1,6 +1,6 @@
 # lapse-pi
 
-![installed camera](https://i.imgur.com/yWUIKSJ.jpg)
+![installed camera](img/lapse_piV1.jpg)
 
 code for grabbing a timelapse with a pi
 # installation
