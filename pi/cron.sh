@@ -36,7 +36,7 @@ curl "https://10.42.0.19/cgi-bin/api.cgi?cmd=Snap&channel=0&user=$UN&password=$P
 # rocky mogrify
 cp ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/src.jpg
 #snow
-/home/turbohoje/lapse-pi/pi/snow.py --image1=${BASEPATH}/src.jpg
+#/home/turbohoje/lapse-pi/pi/snow.py --image1=${BASEPATH}/src.jpg
 
 cp ${BASEPATH}/src.jpg ${BASEPATH}/thumb.jpg
 /usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
@@ -53,5 +53,5 @@ curl "https://10.42.0.35/cgi-bin/api.cgi?cmd=Snap&channel=0&user=$UN&password=$P
 cp ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/box.jpg
 
 #snow
-/home/turbohoje/lapse-pi/pi/snow.py --image2=${BASEPATH}/box.jpg
+#/home/turbohoje/lapse-pi/pi/snow.py --image2=${BASEPATH}/box.jpg
 gsutil cp ${BASEPATH}/box.jpg  gs://tlco-public/box.jpg
