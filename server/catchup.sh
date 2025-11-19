@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
-DAYS=9
+DAYS=7
+
 set -e
 
 for ((i=$DAYS; i>=1; i--))
