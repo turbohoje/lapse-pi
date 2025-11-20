@@ -121,7 +121,7 @@ else
 	#ls -hal $VIDDIR/*.mp4
 
 	if [ $gcs == 1 ]; then
-		gsutil cp $VIDDIR/$DATE-$cam.mp4  gs://tlco-public/Box_$DOW.mp4
+		gsutil cp $VIDDIR/$DATE-$cam.mp4  gs://tlco-public/${cam}_$DOW.mp4
 	fi 
 fi
 set +x
