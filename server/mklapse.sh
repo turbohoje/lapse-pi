@@ -2,7 +2,7 @@
 days=1 # number of days since today, 1 == yesterday
 gen=1  # 1 == generate file
 cam=0  # 0 main hous, 1 box
-upload=1
+upload=1 #upload to yt
 gcs=0 # upload weekday to bucket
 thumb=0 # 1 == update combined thumbnail sprite
 
@@ -114,7 +114,7 @@ if [ $gen == 1 ]; then
   cd "${OUTDIR}"
   rm -f "${VIDDIR}/video.mp4"
   echo "generating video for $DATE"
-  #ffmpeg -start_number 1 -i G%07d.JPG -c:v libx264 -pix_fmt yuv420p "${VIDDIR}/video.mp4"
+  ffmpeg -start_number 1 -i G%07d.JPG -c:v libx264 -pix_fmt yuv420p "${VIDDIR}/video.mp4"
   mv "${VIDDIR}/video.mp4" "${VIDDIR}/last.mp4"
   set +x
 fi
@@ -209,9 +209,9 @@ update_thumb_sprite() {
 set -x
 if [ $upload == 1 ]; then
   cd /home/turbohoje/lapse-pi/
-  echo "token"
+  echo "refreshing yt token via script"
   ./refresh.py
-  echo "uploading video"
+  echo "uploading video to yt via script"
   ./up.py $DATE
 else
   mv "${VIDDIR}/last.mp4" "${VIDDIR}/${DATE}-${cam}.mp4"
