@@ -68,9 +68,18 @@ gsutil cp ${BASEPATH}/south.jpg  gs://tlco-public/south.jpg
 left=1986
 right=3840
 rr=$(( right - left ))
-mogrify -crop ${left}x0+${rr}+0 +repage -path . -format jpg -write bg.jpg south.jpg
+mogrify -crop ${left}x0+${rr}+0 +repage -path . -format jpg -write ${BASEPATH}/bg.jpg ${BASEPATH}/south.jpg
+# Add date/time watermark at bottom center
+convert "${BASEPATH}/bg.jpg" \
+  -gravity southeast \
+  -pointsize 24 \
+  -fill "rgba(200,200,200,0.8)" \
+  -annotate +20+20 "$(date '+%Y-%m-%d %H:%M:%S')" \
+  "${BASEPATH}/bg.jpg"
+
 #upload to tlwebsite
-scp bg.jpg turbohoje@tlwebsite:/var/www/html/img/bg.jpg
+echo "uploading to website"
+scp ${BASEPATH}/bg.jpg turbohoje@tlwebsite:/var/www/html/img/bg.jpg
 
 #4th cam
 mkdir -p "${BASEPATH}/archive/3/${DATE}/"
