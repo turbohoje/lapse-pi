@@ -64,7 +64,13 @@ curl "https://10.42.0.94/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=
 cp ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/south.jpg
 
 gsutil cp ${BASEPATH}/south.jpg  gs://tlco-public/south.jpg
-
+#crop
+left=1986
+right=3840
+rr=$(( right - left ))
+mogrify -crop ${left}x0+${rr}+0 +repage -path . -format jpg -write bg.jpg south.jpg
+#upload to tlwebsite
+scp bg.jpg turbohoje@tlwebsite:/var/www/html/img/bg.jpg
 
 #4th cam
 mkdir -p "${BASEPATH}/archive/3/${DATE}/"
