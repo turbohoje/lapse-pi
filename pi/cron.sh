@@ -55,3 +55,21 @@ cp ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/box.jpg
 #snow
 #/home/turbohoje/lapse-pi/pi/snow.py --image2=${BASEPATH}/box.jpg
 gsutil cp ${BASEPATH}/box.jpg  gs://tlco-public/box.jpg
+
+
+#3rd cam 10.42.0.94
+mkdir -p "${BASEPATH}/archive/2/${DATE}/"
+curl "https://10.42.0.94/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=$PW" -s --insecure --output ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg
+/usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg
+cp ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/south.jpg
+
+gsutil cp ${BASEPATH}/south.jpg  gs://tlco-public/south.jpg
+
+
+#4th cam
+mkdir -p "${BASEPATH}/archive/3/${DATE}/"
+curl "https://10.42.0.95/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=$PW" -s --insecure --output ${BASEPATH}/archive/3/${DATE}/${TIMESTAMP}.jpg
+/usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/3/${DATE}/${TIMESTAMP}.jpg
+cp ${BASEPATH}/archive/3/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/uphemi.jpg
+
+gsutil cp ${BASEPATH}/uphemi.jpg  gs://tlco-public/uphemi.jpg
