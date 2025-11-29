@@ -73,7 +73,7 @@ mogrify -crop ${left}x0+${rr}+0 +repage -path . -format jpg -write ${BASEPATH}/b
 convert "${BASEPATH}/bg.jpg" \
   -gravity southeast \
   -pointsize 24 \
-  -fill "rgba(200,200,200,0.8)" \
+  -fill "rgba(200,200,200,0.9)" \
   -annotate +20+20 "$(date '+%Y-%m-%d %H:%M:%S')" \
   "${BASEPATH}/bg.jpg"
 
