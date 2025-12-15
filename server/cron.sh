@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+# continue on fail
+set +e
+
 DAYS=1
 
 for arg in "$@"; do
