@@ -42,8 +42,8 @@ cp ${BASEPATH}/src.jpg ${BASEPATH}/thumb.jpg
 /usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/0/${DATE}/${TIMESTAMP}.jpg
 /usr/bin/mogrify -compress JPEG2000 -resize "20%" ${BASEPATH}/thumb.jpg 
 
-gsutil cp ${BASEPATH}/src.jpg  gs://tlco-public/latest.jpg
-gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
+#gsutil cp ${BASEPATH}/src.jpg  gs://tlco-public/latest.jpg
+#gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
 rclone copyto ${BASEPATH}/src.jpg   r2:marmot/latest.jpg
 rclone copyto ${BASEPATH}/thumb.jpg r2:marmot/thumb.jpg
 
@@ -55,7 +55,7 @@ cp ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/box.jpg
 
 #snow
 #/home/turbohoje/lapse-pi/pi/snow.py --image2=${BASEPATH}/box.jpg
-gsutil cp ${BASEPATH}/box.jpg  gs://tlco-public/box.jpg
+#gsutil cp ${BASEPATH}/box.jpg  gs://tlco-public/box.jpg
 rclone copyto ${BASEPATH}/box.jpg r2:marmot/box.jpg
 
 #3rd cam 10.42.0.94
@@ -64,7 +64,7 @@ curl "https://10.42.0.94/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=
 /usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg
 cp ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/south.jpg
 
-gsutil cp ${BASEPATH}/south.jpg  gs://tlco-public/south.jpg
+#gsutil cp ${BASEPATH}/south.jpg  gs://tlco-public/south.jpg
 rclone copyto ${BASEPATH}/south.jpg  r2:marmot/south.jpg
 
 #crop
@@ -91,5 +91,5 @@ curl "https://10.42.0.95/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=
 /usr/bin/mogrify -compress JPEG2000 -quality 90   ${BASEPATH}/archive/3/${DATE}/${TIMESTAMP}.jpg
 cp ${BASEPATH}/archive/3/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/uphemi.jpg
 
-gsutil cp ${BASEPATH}/uphemi.jpg  gs://tlco-public/uphemi.jpg
+#gsutil cp ${BASEPATH}/uphemi.jpg  gs://tlco-public/uphemi.jpg
 rclone copyto ${BASEPATH}/uphemi.jpg r2:marmot/uphemi.jpg
