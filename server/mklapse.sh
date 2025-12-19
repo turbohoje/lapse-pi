@@ -202,8 +202,8 @@ update_thumb_sprite() {
   rm -f "${tmp_thumb}"
 
   # Upload sprite to GCS (single shared file)
-  gsutil cp "${SPRITE}" gs://tlco-public/thumbs.png
-  
+  #gsutil cp "${SPRITE}" gs://tlco-public/thumbs.png
+  rclone copyto "${SPRITE}" r2:/marmot/thumbs.png  
 }
 
 set -x
@@ -217,7 +217,8 @@ else
   mv "${VIDDIR}/last.mp4" "${VIDDIR}/${DATE}-${cam}.mp4"
 
   if [ $gcs == 1 ]; then
-    gsutil cp "${VIDDIR}/${DATE}-${cam}.mp4" gs://tlco-public/${cam}_$DOW.mp4
+    #gsutil cp "${VIDDIR}/${DATE}-${cam}.mp4" gs://tlco-public/${cam}_$DOW.mp4
+    rclone copyto "${VIDDIR}/${DATE}-${cam}.mp4" r2:/marmot/${cam}_$DOW.mp4
   fi
 fi
 set +x
