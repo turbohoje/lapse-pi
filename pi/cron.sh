@@ -44,7 +44,8 @@ cp ${BASEPATH}/src.jpg ${BASEPATH}/thumb.jpg
 
 gsutil cp ${BASEPATH}/src.jpg  gs://tlco-public/latest.jpg
 gsutil cp ${BASEPATH}/thumb.jpg  gs://tlco-public/thumb.jpg
-
+rclone copyto ${BASEPATH}/src.jpg   r2:marmot/latest.jpg
+rclone copyto ${BASEPATH}/thumb.jpg r2:marmot/thumb.jpg
 
 #2nd cam
 mkdir -p "${BASEPATH}/archive/1/${DATE}/"
@@ -55,7 +56,7 @@ cp ${BASEPATH}/archive/1/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/box.jpg
 #snow
 #/home/turbohoje/lapse-pi/pi/snow.py --image2=${BASEPATH}/box.jpg
 gsutil cp ${BASEPATH}/box.jpg  gs://tlco-public/box.jpg
-
+rclone copyto ${BASEPATH}/box.jpg r2:marmot/box.jpg
 
 #3rd cam 10.42.0.94
 mkdir -p "${BASEPATH}/archive/2/${DATE}/"
@@ -64,6 +65,8 @@ curl "https://10.42.0.94/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=
 cp ${BASEPATH}/archive/2/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/south.jpg
 
 gsutil cp ${BASEPATH}/south.jpg  gs://tlco-public/south.jpg
+rclone copyto ${BASEPATH}/south.jpg  r2:marmot/south.jpg
+
 #crop
 left=1986
 right=3840
@@ -80,6 +83,7 @@ convert "${BASEPATH}/bg.jpg" \
 #upload to tlwebsite
 echo "uploading to website"
 scp ${BASEPATH}/bg.jpg turbohoje@tlwebsite:/var/www/html/img/bg.jpg
+rclone copyto ${BASEPATH}/bg.jpg r2:/img/bg.jpg
 
 #4th cam
 mkdir -p "${BASEPATH}/archive/3/${DATE}/"
@@ -88,3 +92,4 @@ curl "https://10.42.0.95/cgi-bin/api.cgi?cmd=Snap&channel=0&user=admin&password=
 cp ${BASEPATH}/archive/3/${DATE}/${TIMESTAMP}.jpg ${BASEPATH}/uphemi.jpg
 
 gsutil cp ${BASEPATH}/uphemi.jpg  gs://tlco-public/uphemi.jpg
+rclone copyto ${BASEPATH}/uphemi.jpg r2:marmot/uphemi.jpg
