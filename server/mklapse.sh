@@ -4,7 +4,7 @@ gen=1  # 1 == generate file
 cam=0  # 0 main hous, 1 box
 upload=1 #upload to yt
 gcs=0 # upload weekday to bucket
-thumb=0 # 1 == update combined thumbnail sprite
+thumb=1 # 1 == update combined thumbnail sprite
 
 # Parse command-line arguments
 for arg in "$@"; do
@@ -72,7 +72,7 @@ SPRITE=${VIDDIR}/thumb-sprite.png
 THUMB_W=320
 THUMB_H=180
 SPRITE_COLS=7   # Sun..Sat
-SPRITE_ROWS=3   # cams 1..3
+SPRITE_ROWS=4   # cams 0..3
 SPRITE_W=$((THUMB_W * SPRITE_COLS))
 SPRITE_H=$((THUMB_H * SPRITE_ROWS))
 
@@ -164,7 +164,8 @@ update_thumb_sprite() {
   esac
 
   # cam index (1..3) to row index (0..2)
-  local row_index=$((cam - 1))
+  #local row_index=$((cam - 1))
+  local row_index=$((cam))
   if [ "$row_index" -lt 0 ] || [ "$row_index" -ge "$SPRITE_ROWS" ]; then
     echo "Unexpected cam index $cam for sprite rows, skipping thumb update."
     return
@@ -213,10 +214,14 @@ if [ $upload == 1 ]; then
   ./refresh.py
   echo "uploading video to yt via script"
   ./up.py $DATE
+
+  #also store to r2, why not
+  rclone copyto "${VIDDIR}/last.mp4" r2:/marmot/${cam}_$DOW.mp4
 else
   mv "${VIDDIR}/last.mp4" "${VIDDIR}/${DATE}-${cam}.mp4"
 
   if [ $gcs == 1 ]; then
+    echo "uploading r2:/marmot/${cam}_$DOW.mp4"
     #gsutil cp "${VIDDIR}/${DATE}-${cam}.mp4" gs://tlco-public/${cam}_$DOW.mp4
     rclone copyto "${VIDDIR}/${DATE}-${cam}.mp4" r2:/marmot/${cam}_$DOW.mp4
   fi
