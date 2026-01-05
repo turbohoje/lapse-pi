@@ -224,6 +224,7 @@ else
     echo "uploading r2:/marmot/${cam}_$DOW.mp4"
     #gsutil cp "${VIDDIR}/${DATE}-${cam}.mp4" gs://tlco-public/${cam}_$DOW.mp4
     rclone copyto "${VIDDIR}/${DATE}-${cam}.mp4" r2:/marmot/${cam}_$DOW.mp4
+    echo "upload exit status $?"
   fi
 fi
 set +x
