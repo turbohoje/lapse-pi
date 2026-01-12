@@ -234,3 +234,6 @@ if [ "$thumb" == "1" ]; then
   echo "Updating combined thumbnail sprite..."
   update_thumb_sprite
 fi
+
+#clean up all the copied images 
+rm $OUTDIR/*
