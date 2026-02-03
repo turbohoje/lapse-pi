@@ -14,9 +14,16 @@ channel.login("client_secret.json", "creds.storage")
 # setting up the video that is going to be uploaded
 video = LocalVideo(file_path="video-out/last.mp4")
 
+description = """Automated Upload
+
+If you're going to buy something on Amazon, use my affiliate link and send me a nail to bend at no cost to you:
+https://www.amazon.com/gp/goldbox?tag=turbohoje-20
+
+Any purchase you make through this link helps out the build!"""
+
 # setting snippet
 video.set_title("Daily Recap " + sys.argv[1])
-video.set_description("Automated Upload")
+video.set_description(description)
 video.set_tags(["marmot", "time-lapse"])
 #video.set_category("gaming")
 video.set_default_language("en-US")
