@@ -1,24 +1,24 @@
 # Z-Wave Exporter Project Context
 
 ## Hardware
-- Zooz ZST39 LR Z-Wave USB dongle (node 1)
+- Zooz 800 Z-Wave USB dongle — `/dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00` → `/dev/ttyACM0`
 - Aeotec aërQ (ZWA039) temperature/humidity sensor (node 9, insecure inclusion)
-- Running on macOS for dev, will deploy to Linux staging then prod
+- Running on Linux (migrated from macOS)
 
 ## Architecture
-- `zwave-js-server` running natively via npx (macOS USB workaround)
-- `zwave-exporter` Python container connects via WebSocket to host.docker.internal:3000
+- `zwave-js-ui` container drives the USB dongle directly (USB passthrough works natively on Linux)
+- `zwave-exporter` Python container connects via WebSocket to `ws://zwave-js-ui:3000` (same Docker network)
 - Prometheus metrics served on :9100
 
 ## Current status
 - Sensor paired and working as node 9 (insecure inclusion, no S2)
 - Exporter publishing: `zwave_temperature_celsius`, `zwave_humidity_percent`, `zwave_dew_point_celsius`, `zwave_node_alive`, `zwave_node_battery_level`, `zwave_node_info`
 - Wakeup interval: 3600 seconds (1 hour) — sensor self-reports on this interval
-- Next step: test on Linux staging server before moving hardware to prod
+- Migrated from macOS to Linux — full docker compose stack
 
 ## Run commands
 
-### macOS dev (zwave-js-server native, exporter in Docker)
+### macOS dev (for reference — zwave-js-server native, exporter in Docker)
 ```
 zwave-server /dev/cu.usbserial-533D0042421 --port 3000
 docker compose run --no-deps --rm --build -e ZWAVE_WS_URL=ws://host.docker.internal:3000 --service-ports zwave-exporter python exporter.py

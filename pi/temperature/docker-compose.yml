@@ -32,12 +32,13 @@ services:
       - SESSION_SECRET=${SESSION_SECRET:-changeme_use_a_random_string}
       - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
       - TZ=${TZ:-America/Denver}
+    group_add:
+      - "20"   # dialout — grants container access to /dev/ttyACM*
     devices:
-      # Use the stable by-id path, NOT /dev/ttyUSBx (number can shift on reboot).
-      # Find yours: ls -la /dev/serial/by-id/
-      # Example for Zooz ZST38LR:
-      #   /dev/serial/by-id/usb-Silicon_Labs_Zooz_ZST10_700_Z-Wave_Stick_...-port0
-      - "/dev/cu.usbserial-533D0042421"
+      # Stable by-id symlink → mapped to /dev/ttyACM0 inside the container.
+      # The by-id path survives reboots; ttyACM0 number can shift if other
+      # ACM devices are present.
+      - "/dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00:/dev/ttyACM0"
     volumes:
       # Pairing state (network keys, node DB) lives here.
       # Back this up — losing it means re-pairing all devices.
