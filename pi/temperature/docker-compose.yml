@@ -1,0 +1,76 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Z-Wave Prometheus Exporter Stack
+#
+# Services:
+#   zwave-js-ui   — Z-Wave JS UI (formerly zwavejs2mqtt)
+#                   • drives the USB Z-Wave dongle
+#                   • exposes WebSocket on :3000 for the exporter
+#                   • exposes web UI on :8091 for pairing / debugging
+#
+#   zwave-exporter — Python Prometheus exporter
+#                    • scrapes live values from zwave-js-ui via WebSocket
+#                    • exports /metrics on :9100
+#
+# Quick start:
+#   1. Find your dongle's stable device path (see README)
+#   2. Copy .env.example to .env and fill in values
+#   3. docker compose up -d
+#   4. Open http://localhost:8091 to pair your sensor (one-time)
+#   5. Scrape http://localhost:9100/metrics with Prometheus
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  zwave-js-ui:
+    image: zwavejs/zwave-js-ui:latest
+    container_name: zwave-js-ui
+    restart: unless-stopped
+    tty: true
+    stop_signal: SIGINT
+    environment:
+      - SESSION_SECRET=${SESSION_SECRET:-changeme_use_a_random_string}
+      - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
+      - TZ=${TZ:-America/Denver}
+    devices:
+      # Use the stable by-id path, NOT /dev/ttyUSBx (number can shift on reboot).
+      # Find yours: ls -la /dev/serial/by-id/
+      # Example for Zooz ZST38LR:
+      #   /dev/serial/by-id/usb-Silicon_Labs_Zooz_ZST10_700_Z-Wave_Stick_...-port0
+      - "/dev/cu.usbserial-533D0042421"
+    volumes:
+      # Pairing state (network keys, node DB) lives here.
+      # Back this up — losing it means re-pairing all devices.
+      - zwave-config:/usr/src/app/store
+    ports:
+      - "8091:8091"   # Web UI  (pair here, then you can close the port remotely)
+      - "3000:3000"   # WS API  (for the exporter and pair.py)
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8091/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  zwave-exporter:
+    build:
+      context: ./exporter
+    container_name: zwave-exporter
+    restart: unless-stopped
+    depends_on:
+      zwave-js-ui:
+        condition: service_healthy
+    environment:
+      - ZWAVE_WS_URL=ws://zwave-js-ui:3000
+      - METRICS_PORT=9100
+    ports:
+      - "9100:9100"   # Prometheus scrape endpoint
+
+volumes:
+  zwave-config:
+    # This volume contains your Z-Wave network keys and node pairing state.
+    # To move to a remote machine:
+    #   docker run --rm -v zwave-exporter_zwave-config:/data -v $(pwd):/backup \
+    #     alpine tar czf /backup/zwave-config.tar.gz -C /data .
+    # Then restore on the target:
+    #   docker run --rm -v zwave-exporter_zwave-config:/data -v $(pwd):/backup \
+    #     alpine tar xzf /backup/zwave-config.tar.gz -C /data
