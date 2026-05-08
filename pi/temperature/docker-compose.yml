@@ -43,9 +43,12 @@ services:
       # Pairing state (network keys, node DB) lives here.
       # Back this up — losing it means re-pairing all devices.
       - zwave-config:/usr/src/app/store
+      # Pre-paired network cache (home ID f3c91f96). Bind-mounting this
+      # directory avoids re-pairing after migrating from macOS.
+      - ./cache:/usr/src/app/store/.config-db/cache
     ports:
       - "8091:8091"   # Web UI  (pair here, then you can close the port remotely)
-      - "3000:3000"   # WS API  (for the exporter and pair.py)
+      - "3001:3000"   # WS API  (for pair.py — host port 3001 avoids conflict with other local services)
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8091/health"]
       interval: 30s
@@ -65,6 +68,53 @@ services:
       - METRICS_PORT=9100
     ports:
       - "9100:9100"   # Prometheus scrape endpoint
+
+  cf-scrape:
+    env_file:
+        - ./cf-scrape/.env        # secrets — gitignored
+    build:
+      context: ./cf-scrape   # path relative to your compose file
+      dockerfile: Dockerfile
+    image: cf-metrics-scraper:latest
+    container_name: cf-metrics-scraper
+    restart: unless-stopped
+ 
+    # Needed on Linux to resolve host.docker.internal → host gateway IP.
+    # Remove if the exporter is a sibling container instead.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+ 
+    environment:
+      # ── Metrics source ──────────────────────────────────────────────────
+      # Scenario A (sibling container):  http://your-exporter-service:9100/metrics
+      # Scenario B (host process):       http://host.docker.internal:9100/metrics
+      METRICS_URL: "http://host.docker.internal:9100/metrics"
+ 
+      # ── Cloudflare Worker ───────────────────────────────────────────────
+      # mvoed to env file
+ 
+      # ── Sensor IDs stored in D1 ─────────────────────────────────────────
+      SENSOR_ID_TEMP: "house_temp"
+      SENSOR_ID_HUM:  "house_humidity"
+ 
+      # ── Scrape interval ─────────────────────────────────────────────────
+      SCRAPE_INTERVAL: "300"   # seconds (5 minutes)
+ 
+      # ── Optional ────────────────────────────────────────────────────────
+      # LOG_LEVEL: "DEBUG"     # uncomment for verbose output
+      # RUN_ONCE: "true"       # scrape once and exit (useful for testing)
+ 
+    # Uncomment if the exporter is a sibling container:
+    # depends_on:
+    #   - your-zwave-exporter-service
+ 
+    # Optional: resource limits — this service is very light
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 64m
+    #       cpus: "0.1"
+
 
 volumes:
   zwave-config:

@@ -26,7 +26,7 @@ docker compose run --no-deps --rm --build -e ZWAVE_WS_URL=ws://host.docker.inter
 
 ### Pairing / management tool
 ```
-docker compose run --no-deps --rm -e ZWAVE_WS_URL=ws://host.docker.internal:3000 zwave-exporter python pair.py
+docker compose run --no-deps --rm -e ZWAVE_WS_URL=ws://localhost:3001 zwave-exporter python pair.py
 ```
 
 ### Linux (full docker compose, USB passthrough works natively)
