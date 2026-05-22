@@ -145,11 +145,16 @@ def _attach_node_listeners(node: Node) -> None:
     def on_status_changed(event: dict) -> None:
         _update_node_alive(event["node"])
 
+    def on_wakeup(event: dict) -> None:
+        _update_node_alive(event["node"])
+        log.info("node %s woke up — queuing value refresh", node.node_id)
+        asyncio.create_task(node.async_refresh_values())
+
     node.on("value updated", on_value_updated)
     node.on("alive", on_status_changed)
     node.on("dead", on_status_changed)
     node.on("sleep", on_status_changed)
-    node.on("wake up", on_status_changed)
+    node.on("wake up", on_wakeup)
 
 
 async def run(zwave_ws_url: str, metrics_port: int) -> None:
