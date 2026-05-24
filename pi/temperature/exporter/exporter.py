@@ -86,9 +86,6 @@ def _process_value(node: Node, value: Value) -> None:
 
         if sensor_type == SENSOR_TYPE_TEMPERATURE:
             val = float(value.value)
-            unit = (value.metadata.unit or "").strip()
-            if unit == "°F":
-                val = (val - 32) * 5 / 9
             TEMPERATURE.labels(node_id=node_id, node_name=node_name, endpoint=endpoint).set(val)
             log.info("node %s  temperature=%.2f°C", node_id, val)
 
@@ -98,9 +95,6 @@ def _process_value(node: Node, value: Value) -> None:
 
         elif sensor_type == SENSOR_TYPE_DEW_POINT:
             val = float(value.value)
-            unit = (value.metadata.unit or "").strip()
-            if unit == "°F":
-                val = (val - 32) * 5 / 9
             DEW_POINT.labels(node_id=node_id, node_name=node_name, endpoint=endpoint).set(val)
             log.info("node %s  dew_point=%.2f°C", node_id, val)
 
