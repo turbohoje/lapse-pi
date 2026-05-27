@@ -105,7 +105,7 @@ def push_reading(sensor_id: str, value: float, unit: str) -> bool:
         "sensor_id": sensor_id,
         "value":     value,
         "unit":      unit,
-        "location":  "house",
+        "location":  "marmot",
     }
     headers = {
         "Content-Type": "application/json",

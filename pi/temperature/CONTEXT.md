@@ -9,6 +9,7 @@
 - `zwave-js-ui` container drives the USB dongle directly (USB passthrough works natively on Linux)
 - `zwave-exporter` Python container connects via WebSocket to `ws://zwave-js-ui:3000` (same Docker network)
 - Prometheus metrics served on :9100
+- `cf-scrape` container scrapes the Prometheus endpoint and POSTs readings to the Cloudflare Worker (`cf-metrics-server`); sensor IDs are `house_temp` and `house_humidity`, location is `marmot`
 
 ## Current status
 - Sensor paired and working as node 9 (insecure inclusion, no S2)
