@@ -55,3 +55,4 @@
 {"k":"{\"nodeId\":9,\"commandClass\":113,\"endpoint\":0,\"property\":\"Weather Alarm\",\"propertyKey\":\"Moisture alarm status\"}","v":{"type":"number","readable":true,"writeable":false,"min":0,"max":255,"label":"Moisture alarm status","states":{"0":"idle","2":"Moisture alarm"},"ccSpecific":{"notificationType":16}}}
 {"k":"{\"nodeId\":9,\"commandClass\":113,\"endpoint\":0,\"property\":\"alarmType\"}","v":{"type":"number","readable":true,"writeable":false,"min":0,"max":255,"label":"Alarm Type"}}
 {"k":"{\"nodeId\":9,\"commandClass\":113,\"endpoint\":0,\"property\":\"alarmLevel\"}","v":{"type":"number","readable":true,"writeable":false,"min":0,"max":255,"label":"Alarm Level"}}
+{"k":"{\"nodeId\":11,\"commandClass\":49,\"endpoint\":0,\"property\":\"Air temperature\"}","v":{"type":"number","readable":true,"writeable":false,"label":"Air temperature","unit":"°C","ccSpecific":{"sensorType":1,"scale":0}}}

@@ -146,3 +146,5 @@
 {"k":"{\"nodeId\":9,\"commandClass\":132,\"endpoint\":0,\"property\":\"wakeUpInterval\"}","v":3600,"ts":1776899187160}
 {"k":"{\"nodeId\":9,\"commandClass\":112,\"endpoint\":0,\"property\":1}","v":1,"ts":1776899860493}
 {"k":"{\"nodeId\":9,\"commandClass\":112,\"endpoint\":0,\"property\":3}","v":5,"ts":1776899860820}
+{"k":"{\"nodeId\":11,\"commandClass\":49,\"endpoint\":0,\"property\":\"supportedScales\",\"propertyKey\":1}","v":[0],"ts":1782568911000}
+{"k":"{\"nodeId\":11,\"commandClass\":49,\"endpoint\":0,\"property\":\"Air temperature\"}","v":14.2,"ts":1782568911000}

@@ -7,6 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY exporter.py .
 COPY pair.py .
+COPY node_check.py .
 
 ENV ZWAVE_WS_URL=ws://zwave-js-ui:3001
 ENV METRICS_PORT=9100

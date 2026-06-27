@@ -86,8 +86,11 @@ def _process_value(node: Node, value: Value) -> None:
 
         if sensor_type == SENSOR_TYPE_TEMPERATURE:
             val = float(value.value)
+            unit = getattr(value.metadata, "unit", None)
+            if unit == "°F":
+                val = (val - 32) * 5 / 9
             TEMPERATURE.labels(node_id=node_id, node_name=node_name, endpoint=endpoint).set(val)
-            log.info("node %s  temperature=%.2f°C", node_id, val)
+            log.info("node %s  temperature=%.2f°C (raw=%.2f %s)", node_id, val, float(value.value), unit)
 
         elif sensor_type == SENSOR_TYPE_HUMIDITY:
             HUMIDITY.labels(node_id=node_id, node_name=node_name, endpoint=endpoint).set(float(value.value))
@@ -95,6 +98,9 @@ def _process_value(node: Node, value: Value) -> None:
 
         elif sensor_type == SENSOR_TYPE_DEW_POINT:
             val = float(value.value)
+            unit = getattr(value.metadata, "unit", None)
+            if unit == "°F":
+                val = (val - 32) * 5 / 9
             DEW_POINT.labels(node_id=node_id, node_name=node_name, endpoint=endpoint).set(val)
             log.info("node %s  dew_point=%.2f°C", node_id, val)
 
