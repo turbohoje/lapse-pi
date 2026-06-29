@@ -213,7 +213,10 @@ if [ $upload == 1 ]; then
   echo "refreshing yt token via script"
   ./refresh.py
   echo "uploading video to yt via script"
-  ./up.py $DATE
+  if ! ./up.py $DATE; then
+    echo "YouTube upload FAILED, aborting" >&2
+    exit 1
+  fi
 
   #also store to r2, why not
   rclone copyto "${VIDDIR}/last.mp4" r2:/marmot/${cam}_$DOW.mp4

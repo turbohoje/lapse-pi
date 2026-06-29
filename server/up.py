@@ -4,6 +4,18 @@ from simple_youtube_api.Channel import Channel
 from simple_youtube_api.LocalVideo import LocalVideo
 import sys
 
+# Work around a bug in simple_youtube_api's progress bar: it calls
+# bar.update(100 * 10 * progress + 1) against a bar with max_value=1000, so the
+# trailing +1 overflows the range once progress > 0.999 and raises ValueError,
+# killing the upload near 100%. Clamp update() to the bar's max_value.
+import progressbar
+_orig_update = progressbar.ProgressBar.update
+def _clamped_update(self, value=None, *a, **k):
+    if value is not None and self.max_value is not None:
+        value = min(value, self.max_value)
+    return _orig_update(self, value, *a, **k)
+progressbar.ProgressBar.update = _clamped_update
+
 # loggin into the channel
 channel = Channel()
 #creds.storage is for the upload
