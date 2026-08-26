@@ -51,6 +51,18 @@ WANTED = {
     "zwave_humidity_percent":    (SENSOR_ID_HUM,  "%"),
 }
 
+# Sane physical bounds per unit — readings outside these are sensor/parsing
+# glitches (e.g. a garbled Z-Wave report), not real measurements.
+VALID_RANGES = {
+    "C": (-40.0, 60.0),
+    "%": (0.0, 100.0),
+}
+
+
+def is_valid_reading(value: float, unit: str) -> bool:
+    lo, hi = VALID_RANGES.get(unit, (float("-inf"), float("inf")))
+    return lo <= value <= hi
+
 # ── Signal handling ───────────────────────────────────────────────────────────
 
 _shutdown = False
@@ -138,8 +150,14 @@ def scrape_and_push():
         return
 
     for metric_name, (sensor_id, unit) in WANTED.items():
-        if metric_name in metrics:
-            push_reading(sensor_id, metrics[metric_name], unit)
+        if metric_name not in metrics:
+            continue
+        value = metrics[metric_name]
+        if not is_valid_reading(value, unit):
+            log.warning("Rejecting out-of-range reading %s=%s%s (not pushed)",
+                        sensor_id, value, unit)
+            continue
+        push_reading(sensor_id, value, unit)
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
